@@ -1,0 +1,121 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "c6f978a6489601c0",
+        "type": "mqtt-broker",
+        "name": "mosquitto",
+        "broker": "host.docker.internal",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "facbee92d40e8109",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "DataInterval1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"status\": \"running\", \"temp\": 65}",
+        "payloadType": "str",
+        "x": 260,
+        "y": 100,
+        "wires": [
+            [
+                "a0d26d9ec28133f5"
+            ]
+        ]
+    },
+    {
+        "id": "a0d26d9ec28133f5",
+        "type": "mqtt out",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "factory/machine1/status",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c6f978a6489601c0",
+        "x": 630,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "6145efac470bf8c6",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "factory/machine1/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c6f978a6489601c0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 260,
+        "y": 180,
+        "wires": [
+            [
+                "e89d73ad578cb17a"
+            ]
+        ]
+    },
+    {
+        "id": "e89d73ad578cb17a",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 180,
+        "wires": []
+    }
+]
