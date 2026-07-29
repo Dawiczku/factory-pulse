@@ -12,10 +12,12 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^26.1.2",
+    "@types/ws": "^8.18.1",
     "ts-node": "^10.9.2",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "mqtt": "^5.15.2"
+    "mqtt": "^5.15.2",
+    "ws": "^8.21.1"
   }
 }
