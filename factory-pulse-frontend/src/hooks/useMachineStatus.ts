@@ -1,9 +1,9 @@
-import type { MachinePayload } from '../types';
+import type { MachinePayload, Machines } from '../types';
 import { useState, useEffect } from 'react';
 
 export const useMachineStatus = () => {
   const socketUrl = 'ws://localhost:8080';
-  const [machineData, setMachineData] = useState<MachinePayload>();
+  const [machines, setMachines] = useState<Machines>({});
   const [isConnectionActive, setIsConnectionActive] = useState<boolean>(false);
 
   useEffect(() => {
@@ -11,15 +11,17 @@ export const useMachineStatus = () => {
     socket.onopen = () => {
       setIsConnectionActive(true);
     };
-    socket.onerror = () => {
+    socket.onerror = (e) => {
       setIsConnectionActive(false);
-      console.log('Błąd');
+      console.log(e);
     };
     socket.onmessage = (e) => {
       try {
         const parsedData: MachinePayload = JSON.parse(e.data);
-        setMachineData(parsedData);
-        console.log(parsedData);
+        setMachines((prevMachines) => ({
+          ...prevMachines,
+          [parsedData.machineId]: parsedData,
+        }));
       } catch (err) {
         console.error(err);
       }
@@ -32,5 +34,5 @@ export const useMachineStatus = () => {
     };
   }, []);
 
-  return [machineData, isConnectionActive] as const;
+  return [machines, isConnectionActive] as const;
 };

@@ -2,14 +2,18 @@ import { useMachineStatus } from './hooks/useMachineStatus';
 import './App.css';
 
 function App() {
-  const [machineData, isConnectionActive] = useMachineStatus();
+  const [machines, isConnectionActive] = useMachineStatus();
 
   return (
     <>
       {isConnectionActive ? (
-        <p>{`Status: ${machineData?.status} with temp: ${machineData?.temp}`}</p>
+        Object.values(machines).map((machine) => (
+          <div key={machine.machineId}>
+            <p>{`Typ: ${machine.machineType}, status:${machine.status}`}</p>
+          </div>
+        ))
       ) : (
-        <p>{'No connection yet'}</p>
+        <p>{'Nothing'}</p>
       )}
     </>
   );
