@@ -1,21 +1,24 @@
-import { useMachineStatus } from './hooks/useMachineStatus';
-import './App.css';
+import { useMachineStatus } from '@/hooks/useMachineStatus';
+import { MachineCard } from '@/components/MachineCard';
+import '@/App.css';
 
 function App() {
-  const [machines, isConnectionActive] = useMachineStatus();
+  const [machines, isConnectionActive, offlineMachines] = useMachineStatus();
 
   return (
-    <>
+    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
       {isConnectionActive ? (
         Object.values(machines).map((machine) => (
-          <div key={machine.machineId}>
-            <p>{`Typ: ${machine.machineType}, status:${machine.status}`}</p>
-          </div>
+          <MachineCard
+            key={machine.machineId}
+            machine={machine}
+            isOffline={offlineMachines.has(machine.machineId)}
+          />
         ))
       ) : (
-        <p>{'Nothing'}</p>
+        <p>Brak połączenia...</p>
       )}
-    </>
+    </div>
   );
 }
 
