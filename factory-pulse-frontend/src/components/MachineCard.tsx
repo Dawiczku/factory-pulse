@@ -1,50 +1,51 @@
 import type { MachinePayload } from '@/types';
+import { MachineIcon } from './MachineIcon';
 
-interface MachineCardProps {
+interface Props {
   machine: MachinePayload;
   isOffline: boolean;
 }
 
-// Mapa statusów na kolory
-const statusColors: Record<string, string> = {
-  running: '#22c55e', // zielony
-  warning: '#eab308', // żółty
-  error: '#ef4444', // czerwony
+const statusLabel: Record<string, string> = {
+  running: 'Pracuje',
+  warning: 'Ostrzeżenie',
+  error: 'Awaria',
 };
 
-export function MachineCard({ machine, isOffline }: MachineCardProps) {
-  const borderColor = isOffline
-    ? '#6b7280'
-    : (statusColors[machine.status] ?? '#6b7280');
+export function MachineCard({ machine, isOffline }: Props) {
+  const statusClass = isOffline ? 'offline' : machine.status;
 
   return (
-    <div
-      style={{
-        border: `2px solid ${borderColor}`,
-        borderRadius: '8px',
-        padding: '16px',
-        margin: '8px',
-        minWidth: '250px',
-        opacity: isOffline ? 0.5 : 1, // przygaszona karta, jeśli offline
-      }}
-    >
-      <h3>
-        {machine.machineId} ({machine.machineType})
-      </h3>
-      <p>Status: {isOffline ? 'OFFLINE' : machine.status}</p>
-      {machine.statusReason && <p>Powód: {machine.statusReason}</p>}
-      <p>
-        Produkcja: {machine.production.count} (odrzuty:{' '}
-        {machine.production.rejects})
-      </p>
-      <p>
-        Prędkość silnika: {machine.metrics.motorSpeed.value}{' '}
-        {machine.metrics.motorSpeed.unit}
-      </p>
-      <p>
-        Wibracje: {machine.metrics.vibration.value}{' '}
-        {machine.metrics.vibration.unit}
-      </p>
+    <div className={`machine-card ${statusClass}`}>
+      <div className="machine-card__header">
+        <MachineIcon type={machine.machineType} />
+        <div>
+          <h3>{machine.machineId}</h3>
+          <span className="machine-card__type">{machine.machineType}</span>
+        </div>
+        <span className={`status-pill ${statusClass}`}>
+          {isOffline ? 'OFFLINE' : statusLabel[machine.status]}
+        </span>
+      </div>
+
+      <div className="machine-card__body">
+        <div className="stat">
+          <span className="stat__label">Produkcja</span>
+          <span className="stat__value">{machine.production.count}</span>
+        </div>
+        <div className="stat">
+          <span className="stat__label">Odrzuty</span>
+          <span className="stat__value">{machine.production.rejects}</span>
+        </div>
+        {Object.entries(machine.metrics).map(([key, metric]) => (
+          <div className="stat" key={key}>
+            <span className="stat__label">{key}</span>
+            <span className="stat__value">
+              {metric.value} {metric.unit}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
