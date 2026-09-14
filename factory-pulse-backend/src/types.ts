@@ -1,47 +1,16 @@
-// 1. Podstawowe typy pomocnicze
-export interface MetricValue<T = number> {
-  value: T;
-  unit: string | null;
+export interface MetricValue {
+  value: number;
+  unit: string;
 }
 
-export type MachineStatus = "running" | "idle" | "stopped" | "error";
-
-// 2. Wspólna baza dla wszystkich maszyn
-interface BaseMachinePayload {
+export interface MachinePayload {
   machineId: string;
+  machineType: "lifter" | "sorter" | "conveyor";
   timestamp: string;
-  status: MachineStatus;
+  status: "running" | "warning" | "error";
   statusReason: string | null;
-  production: {
-    count: number;
-    rejects: number;
-  };
+  production: { count: number; rejects: number };
+  metrics: Record<string, MetricValue>;
 }
 
-// 3. Specyficzne metryki dla poszczególnych maszyn
-export interface LifterPayload extends BaseMachinePayload {
-  machineType: "lifter";
-  metrics: {
-    motorSpeed: MetricValue;
-    vibration: MetricValue;
-  };
-}
-
-export interface SorterPayload extends BaseMachinePayload {
-  machineType: "sorter";
-  metrics: {
-    speed: MetricValue;
-    infeedsActivated: MetricValue;
-  };
-}
-
-export interface ConveyorPayload extends BaseMachinePayload {
-  machineType: "conveyor";
-  metrics: {
-    speed: MetricValue;
-    productsOnConveyor: MetricValue;
-  };
-}
-
-// 4. Główny typ – unia dyskryminowana
-export type MachinePayload = LifterPayload | SorterPayload | ConveyorPayload;
+export type Machines = Record<string, MachinePayload>;
